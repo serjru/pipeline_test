@@ -1,15 +1,18 @@
 FROM nginx:alpine
 
-# Create a non-root user
-RUN adduser -D myuser
+# Create necessary directories and set permissions
+RUN mkdir -p /var/cache/nginx /var/run /var/log/nginx /usr/share/nginx/html \
+    && chown -R nginx:nginx /var/cache/nginx /var/run /var/log/nginx /usr/share/nginx/html \
+    && chmod -R g+rwx /var/cache/nginx /var/run /var/log/nginx /usr/share/nginx/html
 
-# Change ownership of the necessary directories
-RUN chown -R myuser:myuser /usr/share/nginx/html /var/cache/nginx /var/run /var/log/nginx
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Switch to the non-root user
-USER myuser
-
+# Copy the HTML file
 COPY index.html /usr/share/nginx/html/index.html
+
+# Switch to non-root user
+USER nginx
 
 EXPOSE 8080
 
