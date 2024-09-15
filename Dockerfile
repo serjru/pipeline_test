@@ -1,8 +1,16 @@
 FROM nginx:alpine
+
+# Create a non-root user
+RUN adduser -D myuser
+
+# Change ownership of the necessary directories
+RUN chown -R myuser:myuser /usr/share/nginx/html /var/cache/nginx /var/run /var/log/nginx
+
+# Switch to the non-root user
+USER myuser
+
 COPY index.html /usr/share/nginx/html/index.html
 
-RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
-RUN chgrp -R root /var/cache/nginx
+EXPOSE 8080
 
-# Run nginx as non-root user
-USER nginx
+CMD ["nginx", "-g", "daemon off;"]
