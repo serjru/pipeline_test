@@ -1,3 +1,3 @@
 # pipeline_test
-- a change
+- a change.
 - multicluster deploy.
